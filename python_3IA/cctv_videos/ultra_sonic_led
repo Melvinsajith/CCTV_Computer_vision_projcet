@@ -1,0 +1,44 @@
+import RPi.GPIO as gp  
+
+from time import sleep,time  
+import time
+
+
+gp.setmode(gp.BOARD)  
+gp.setup(25,gp.OUT)
+
+gp.setup(16,gp.OUT)  
+gp.setup(15,gp.IN)  
+print("Measuring")  
+print("Distance")  
+sleep(1)  
+gp.output(16,gp.LOW)  
+sleep(0.000002)  
+global st,sto  
+print("Distance:")  
+while True:  
+    try:  
+        gp.output(16,True)  
+        sleep(0.00001)  
+        gp.output(16,False)  
+        while gp.input(15)==0:  
+            st=time()  
+            #print(st,"\n")  
+        while gp.input(15)==1:  
+            sto=time()  
+            #print(sto)  
+            tt=sto-st  
+            dist=(tt*35124)/2 # in place of 35124 enter your spped of sound on basis of tempreature  
+            dist=round(dist,3)  
+            print("%f"%(dist))  
+            if (dist<10):
+                print("LED NO")
+                gp.output(25, gp.HIGH)
+            else:
+                print("LED OFF")
+                gp.output(25, gp.LOW)
+
+
+    except KeyboardInterrupt:    
+        gp.cleanup()  
+        break  
